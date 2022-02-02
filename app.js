@@ -9,20 +9,24 @@ const DB = process.env.DATABASE;
 const PORT = process.env.PORT;
 
 
-mongoose.connect(DB).then( () => {
-    console.log(`connection Successful`);
-}).catch((err) => console.log(`no connection`));
+require('./db/conn');
+// const User = require('./model/userSchema');
+app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Home Page");
-});
+app.use(require('./router/auth'));
+
+
+
+// app.get("/", (req, res) => {
+//     res.send("Home Page");
+// });
 
 
 app.get("/about", (req, res) => {
     res.send("About Page");
 });
 
-app.get("/services", (req, res) => {
+app.get("/service", (req, res) => {
     res.send("Services");
 });
 
@@ -43,6 +47,9 @@ app.get("/addlot", (req, res) => {
     res.send("Add Lot Page");
 });
 app.get("/updatelot", (req, res) => {
+    res.send("Updatelot Page");
+});
+app.get("/lot", (req, res) => {
     res.send("Updatelot Page");
 });
 
