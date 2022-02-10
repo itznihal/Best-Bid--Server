@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const authenticate = require("../middleware/authenticate");
 
 
 require('../db/conn');
@@ -102,6 +103,18 @@ router.post('/signin', async (req, res) => {
         console.log(err);
     }
 
+});
+
+
+
+
+// ABOUT US PAGE ROUTE
+// we have to use authenticatrion middleware at about page -> inserting authenticate function inside thi app.get function
+
+router.get('/about', authenticate , (req, res) => {
+    console.log(`about us page`);
+    // req.rootUser -> Sending Currently logged in person profile 
+    res.send(req.rootUser);
 });
 
 module.exports = router;
