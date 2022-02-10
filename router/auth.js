@@ -117,4 +117,16 @@ router.get('/about', authenticate , (req, res) => {
     res.send(req.rootUser);
 });
 
+
+
+// FOR GET USERDATA
+
+router.get('/getdata', authenticate , (req, res) => {
+    console.log(`about us page`);
+    // req.rootUser -> Sending Currently logged in person profile 
+    res.send(req.rootUser);
+});
+
+
+
 module.exports = router;
