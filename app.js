@@ -35,9 +35,9 @@ app.get("/service", (req, res) => {
     res.send("Services");
 });
 
-app.get("/contact", (req, res) => {
-    res.send("cContact Page");
-});
+// app.get("/contact", (req, res) => {
+//     res.send("cContact Page");
+// });
 
 
 app.get("/signin", (req, res) => {

@@ -166,4 +166,17 @@ try {
 });
 
 
+// LOGOUT PAGE FUNCTIONALITY
+// IN LOGOUT FUNCTIONALITY -> DELETE AVTIVE COOKIE -> USE LOOGED OUT
+
+router.get('/logout' , (req, res) => {
+
+    console.log(`logout page from server`);
+    res.clearCookie('jwtoken' , {path:'/'});
+    res.status(200).send(`User Logout`);
+
+
+});
+
+
 module.exports = router;
