@@ -128,5 +128,42 @@ router.get('/getdata', authenticate , (req, res) => {
 });
 
 
+// CONTACT US PAGE 
+router.post('/contact',authenticate , async (req, res) => {
+    const {name, email, subject, message} = req.body;
+    
+    // console.log(`pre testing`);
+    // console.log(name);
+    // console.log(email);
+    // console.log(subject);
+
+    // console.log(message);
+try {
+
+    const {name, email, subject, message} = req.body;
+
+    if( !name || !email || !subject || !message ){
+        console.log("Error in ciontact form at server side");
+        return res.json({ error: "All Feilds must be filled"});
+    }
+
+
+    const userContact = await User.findOne({_id:req.userID});
+
+    if(userContact){
+
+        const userMessage = await userContact.addMessage(name, email, subject, message);
+
+        await userContact.save();
+
+        res.status(201).json({message : "User Contact Form Saved Successfully"});
+    }
+    
+} catch (error) {
+    console.log(`auth file error : ${error}`);
+}
+
+});
+
 
 module.exports = router;
