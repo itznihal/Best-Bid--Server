@@ -15,7 +15,12 @@ require('./db/conn');
 app.use(express.json());
 app.use(cookieParser());
 
+// HANDLING UNCAUGHT EXCEPTION -> CONSOLE.LOG(UNDEFINE VARIABLE)
+process.on("uncaughtException" , err => {
+    console.log(`Error : ${err}`);
+    console.log(` Server is closing due to Handling Uncaught Error Exception`);
 
+});
 
 
 // ROUTERS
@@ -69,6 +74,17 @@ app.get("/lot", (req, res) => {
 });
 
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server is running at ${PORT}`);
 });
+
+
+// UNHANDLED PROMISE REJECTION ->> IF .ENV CONFIG FILE CHANGE
+process.on("unhandledRejection" , err => {
+    console.log(`Error : ${err.message}`);
+    console.log(`Config file problem sutting down server due to unhandled promise rejection`);
+
+    server.close(() => {
+        process.exit(1);
+    });
+})

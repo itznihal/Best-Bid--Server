@@ -1,9 +1,12 @@
 const Product = require("../model/productModel");
 const ErrorHander = require("../utils/errorHander");
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const ApiFeatures = require("../utils/apifeatures");
+
 
 
 // CREATE PRODUCT -->> WORKING
-exports.createProduct = async (req ,res , next) => {
+exports.createProduct = catchAsyncErrors(async (req ,res , next) => {
     console.log(`Create Product Function from Route Called`);
 
     const product = await Product.create(req.body);
@@ -11,24 +14,25 @@ exports.createProduct = async (req ,res , next) => {
     res.status(201).json({
         success:true,
         product
-    })
+    });
 
-}
+});
 
 // GET ALL PRODUCT ->> WORKING 
-exports.getAllProducts = async (req,res) => {
-
+exports.getAllProducts = catchAsyncErrors(async (req,res) => {
+// API FEATURE TAKES -> QUERY & QUERYSTR
+    const apiFeatures = new ApiFeatures( Product.find() , req.query);
     const products = await Product.find();
 
 res.status(200).json({
     success:true,
     products
-    })
+    });
 
-}
+});
 
 // UPDATE PRODUCTS  ->> WORKING 
-exports.updateProduct = async (req , res , next) =>{
+exports.updateProduct = catchAsyncErrors(async (req , res , next) =>{
     let product = await Product.findById(req.params.id);
 
     if(!product){
@@ -44,11 +48,11 @@ exports.updateProduct = async (req , res , next) =>{
     res.status(200).json({
         success:true,
         product
-    })
-}
+    });
+});
 
 // TO DELETE PRODUCT -->> WORKING
-exports.deleteProduct = async (req , res , next) => {
+exports.deleteProduct = catchAsyncErrors(async (req , res , next) => {
 
     const product = await Product.findById(req.params.id);
 
@@ -61,12 +65,12 @@ exports.deleteProduct = async (req , res , next) => {
     res.status(200).json({
         success:true,
         message:"Product Deleted"
-    })
-}
+    });
+});
 
 
 // GET PRODUCT DETAILS
-exports.getProductDetails = async (req , res , next) => {
+exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
     const product = await Product.findById(req.params.id);
 
@@ -78,6 +82,6 @@ exports.getProductDetails = async (req , res , next) => {
     res.status(200).json({
         success:true,
         product
-    })
+    });
 
-}
+});
