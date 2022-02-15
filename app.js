@@ -14,7 +14,17 @@ require('./db/conn');
 // const User = require('./model/userSchema');
 app.use(express.json());
 app.use(cookieParser());
+
+
+
+
+// ROUTERS
 app.use(require('./router/auth'));
+app.use(require('./router/productRoute'));
+
+// MIDDLEWARE FOR ERRORS
+app.use(require('./middleware/error'));
+
 
 
 

@@ -17,7 +17,7 @@ router.post('/register', async (req, res) => {
     const { name, email, phone, password, cpassword } = req.body;
 
     if (!name || !email || !phone || !password || !cpassword) {
-        return res.status(450).json({ error: "Fill all Require Feild Properly " });
+        return res.status(400).json({ error: "Fill all Require Feild Properly " });
     }
 
     try {
@@ -27,9 +27,9 @@ router.post('/register', async (req, res) => {
 
 
         if (userExist) {
-            return res.status(450).json({ error: "Email already exist" });
+            return res.status(400).json({ error: "Email already exist" });
         } else if (password != cpassword) {
-            return res.status(450).json({ error: "password is not matching" })
+            return res.status(400).json({ error: "password is not matching" })
 
         } else {
 
