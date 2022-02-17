@@ -128,6 +128,44 @@ router.get('/getdata', authenticate , (req, res) => {
 });
 
 
+//CHANGE PASSWORD ROUTE
+
+router.put('/password/update', authenticate , async (req, res) => {
+
+    // req.rootUser -> Sending Currently logged in person profile 
+    try{
+
+   const user = await User.findById( req.userID ).select("+password");
+
+//   const isPasswordMatched = await bcrypt.compare(password, userLogin.password);
+// req.body.oldPassword
+
+const isPasswordMatched = await bcrypt.compare(req.body.oldPassword , user.password);
+
+   if(!isPasswordMatched){
+    res.status(400).json({ error: "old password incorrect" });
+   }
+
+
+   if( req.body.newPassword !==req.body.confirmPassword){
+    res.status(400).json({ error: "Password does not matched" });
+   }
+
+   user.password =req.body.newPassword;
+
+   await user.save();
+
+   res.status(200).send(req.token);
+
+
+
+
+    } catch (error) {
+        console.log(`Password reset error : ${error}`);
+    }
+});
+
+
 // CONTACT US PAGE 
 router.post('/contact',authenticate , async (req, res) => {
     const {name, email, subject, message} = req.body;

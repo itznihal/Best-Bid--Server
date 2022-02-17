@@ -23,8 +23,8 @@ exports.getAllProducts = catchAsyncErrors(async (req,res) => {
 // API FEATURE TAKES -> QUERY & QUERYSTR
     const resultPerPage = 6;
 const productCount = await Product.countDocuments();
-
-    const apiFeature = new ApiFeatures(Product.find() , req.query)
+// find({ 'bidEnd': { $gt: new Date() }}) -> IF BID ENDED -> NOT SHOWN IN RESULT
+    const apiFeature = new ApiFeatures(Product.find().populate('seller', '_id name phone').populate('bids.bidder', '_id name phone') , req.query)
     .search()
     .filter()
     .pagination(resultPerPage);
@@ -79,7 +79,7 @@ exports.deleteProduct = catchAsyncErrors(async (req , res , next) => {
 // GET PRODUCT DETAILS
 exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate('seller', '_id name phone').populate('bids.bidder', '_id name phone');
 
     
     if(!product){
