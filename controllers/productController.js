@@ -79,7 +79,7 @@ exports.deleteProduct = catchAsyncErrors(async (req , res , next) => {
 // GET PRODUCT DETAILS
 exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
-    const product = await Product.findById(req.params.id).populate('seller', '_id name phone').populate('bids.bidder', '_id name phone');
+    const product = await Product.findById(req.params.id).populate('seller', '_id name').populate('bids.bidder', '_id name phone');
 
     
     if(!product){

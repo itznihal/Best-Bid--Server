@@ -166,6 +166,55 @@ const isPasswordMatched = await bcrypt.compare(req.body.oldPassword , user.passw
 });
 
 
+
+
+
+//UPDATE USER PROFILE
+
+router.put('/me/update', authenticate , async (req, res) => {
+
+    // req.rootUser -> Sending Currently logged in person profile 
+    try{
+
+const newUserData = {
+
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+
+}
+
+
+
+   const user = await User.findByIdAndUpdate( req.userID , newUserData, {
+       new: true,
+       runValidators : true,
+       userFindAndModify : false,
+   } );
+
+
+   res.status(200).json({success : true});
+
+
+
+
+    } catch (error) {
+        console.log(`Password reset error : ${error}`);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 // CONTACT US PAGE 
 router.post('/contact',authenticate , async (req, res) => {
     const {name, email, subject, message} = req.body;
