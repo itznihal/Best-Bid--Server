@@ -3,13 +3,41 @@ const ErrorHander = require("../utils/errorHander");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ApiFeatures = require("../utils/apifeatures");
 
+const jwt = require("jsonwebtoken");
+const User = require("../model/userSchema");
 
-
+// const authenticate = require("../middleware/authenticate");
+// req.rootUser
 // CREATE PRODUCT -->> WORKING
-exports.createProduct = catchAsyncErrors(async (req ,res , next) => {
+exports.createProduct = catchAsyncErrors(async  (req ,res , next) => {
     console.log(`Create Product Function from Route Called`);
 
-    const product = await Product.create(req.body);
+try {
+    // HERE WE GET CURRENT TOKEN FROM JWT TOKEN
+const token =  req.cookies.jwtoken;
+    const verifyToken = jwt.verify(token , process.env.SECRET_KEY);
+const rootUser  = await User.findOne({ _id: verifyToken._id , "tokens.token": token});
+if(!rootUser){    throw new Error('User Not Found')}
+req.token = token;
+req.rootUser = rootUser;
+req.userID = rootUser._id;
+} catch (err) {
+    console.log(`error token verification`);
+    res.status(401).send('Unorthorised: No token provided');
+}
+
+
+
+// console.log(ob2);
+
+    // const product = await Product.create(req.body);
+
+    let product = new Product(req.body);
+    product.seller= req.userID;
+
+    await product.save();
+
+    // ADD ROW OF SELLER ID AFTER CREATION -> WE DONT HAVE  -> sSEND ID FROM FRONT END
 
     res.status(201).json({
         success:true,
@@ -18,13 +46,15 @@ exports.createProduct = catchAsyncErrors(async (req ,res , next) => {
 
 });
 
+
+
 // GET ALL PRODUCT ->> WORKING 
 exports.getAllProducts = catchAsyncErrors(async (req,res) => {
 // API FEATURE TAKES -> QUERY & QUERYSTR
     const resultPerPage = 6;
 const productCount = await Product.countDocuments();
 // find({ 'bidEnd': { $gt: new Date() }}) -> IF BID ENDED -> NOT SHOWN IN RESULT
-    const apiFeature = new ApiFeatures(Product.find().populate('seller', '_id name phone').populate('bids.bidder', '_id name phone') , req.query)
+    const apiFeature = new ApiFeatures(Product.find().populate('seller', '_id name phone email').populate('bids.bidder', '_id name ') , req.query)
     .search()
     .filter()
     .pagination(resultPerPage);
@@ -74,6 +104,41 @@ exports.deleteProduct = catchAsyncErrors(async (req , res , next) => {
         message:"Product Deleted"
     });
 });
+
+
+
+
+//GET MY PRODUCTS
+exports.getMyProducts = catchAsyncErrors(async (req,res) => {
+  
+    try {
+        // HERE WE GET CURRENT TOKEN FROM JWT TOKEN
+    const token =  req.cookies.jwtoken;
+        const verifyToken = jwt.verify(token , process.env.SECRET_KEY);
+    const rootUser  = await User.findOne({ _id: verifyToken._id , "tokens.token": token});
+    if(!rootUser){    throw new Error('User Not Found')}
+    req.token = token;
+    req.rootUser = rootUser;
+    req.userID = rootUser._id;
+    } catch (err) {
+        console.log(`error token verification`);
+        res.status(401).send('Unorthorised: No token provided');
+    }
+
+
+
+    let myproducts = await Product.find({seller: req.userID}).populate('seller', '_id name phone').populate('bids.bidder', '_id name phone');
+
+    console.log(`myProduct page Called`);
+    res.status(200).json({
+        success:true,
+        myproducts
+        });
+    
+    });
+
+
+
 
 
 // GET PRODUCT DETAILS
