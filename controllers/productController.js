@@ -49,12 +49,12 @@ req.userID = rootUser._id;
 
 
 // GET ALL PRODUCT ->> WORKING 
-exports.getAllProducts = catchAsyncErrors(async (req,res) => {
+exports.getAllProducts = catchAsyncErrors(async (req,res, next) => {
 // API FEATURE TAKES -> QUERY & QUERYSTR
-    const resultPerPage = 6;
+    const resultPerPage = 9;
 const productCount = await Product.countDocuments();
 // find({ 'bidEnd': { $gt: new Date() }}) -> IF BID ENDED -> NOT SHOWN IN RESULT
-    const apiFeature = new ApiFeatures(Product.find().populate('seller', '_id name phone email').populate('bids.bidder', '_id name ') , req.query)
+    const apiFeature = new ApiFeatures(Product.find({ 'bidEnd': { $gt: new Date() }}).populate('seller', '_id name phone email').populate('bids.bidder', '_id name ') , req.query)
     .search()
     .filter()
     .pagination(resultPerPage);
