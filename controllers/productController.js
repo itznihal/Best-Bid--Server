@@ -144,8 +144,9 @@ exports.getMyProducts = catchAsyncErrors(async (req,res) => {
 // GET PRODUCT DETAILS
 exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
-    const product = await Product.findById(req.params.id).populate('seller', '_id name').populate('bids.bidder', '_id name phone');
-
+    const product = await Product.findById(req.params.id).populate('seller', ' _id name phone email').populate('bids.bidder', '_id name phone');
+    const sellerDetails = product.seller;
+    console.log(sellerDetails);
     
     if(!product){
        return next(new ErrorHander("Product Not Found" , 404));
@@ -153,7 +154,8 @@ exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
     res.status(200).json({
         success:true,
-        product
+        product,
+        sellerDetails,
     });
 
 });
