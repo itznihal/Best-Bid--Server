@@ -172,7 +172,7 @@ const isPasswordMatched = await bcrypt.compare(req.body.oldPassword , user.passw
 //UPDATE USER PROFILE
 
 router.put('/me/update', authenticate , async (req, res) => {
-
+console.log(req.body.name , req.body.email ,req.body.phone  );
     // req.rootUser -> Sending Currently logged in person profile 
     try{
 
@@ -199,7 +199,8 @@ const newUserData = {
 
 
     } catch (error) {
-        console.log(`Password reset error : ${error}`);
+        console.log(`Profile Update error : ${error}`);
+        res.status(400).json({ error: "Profile Update Error" });
     }
 });
 
