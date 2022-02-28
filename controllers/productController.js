@@ -241,6 +241,7 @@ var winStatus;
 // winStatus = "Auction is Currently Active";
 // }
 // else{
+    // }
     const bidWinnner = product.bids;
 
     var maxWin = Math.max.apply(Math, bidWinnner.map(function(o) { return o.bid; }));
@@ -269,7 +270,7 @@ var winStatus;
     console.log(winStatus);
     
     
-// }
+
 
 
     if(!product){
