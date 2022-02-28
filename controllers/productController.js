@@ -228,39 +228,48 @@ exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
 // Bid Winner
 // // const bidWinnner = await Product.find({_id : req.params.id}).sort({"bids.bid" : -1}).limit(1).populate('bids.bidder', '_id name phone');
+var countdownDate = new Date(product.bidEnd).getTime();
+      var now = new Date().getTime();
+
 var winStatus;
-if(product.bidEnd<Date.now){
+// if(countdownDate > now ){
     
 
 
-const bidWinnner = product.bids;
 
-var maxWin = Math.max.apply(Math, bidWinnner.map(function(o) { return o.bid; }));
+// console.log(`Auctiion Not Ended`);
+// winStatus = "Auction is Currently Active";
+// }
+// else{
+    const bidWinnner = product.bids;
 
-console.log(maxWin);
-
-
-var result;
-bidWinnner.forEach(function (arrayItem) {
-    if(arrayItem.bid === maxWin){
-    // console.log(arrayItem);
-    // console.log(JSON.stringify(arrayItem));
-    // let userObj = JSON.parse(arrayItem);
-    result =  arrayItem;
-    return;
-    }
-});
-
- winStatus = result.bidder;
-// console.log(result.bidder);
-// console.log(result.bidder.phone);
-// console.log(result.bidder.email);
-}
-else{
-    console.log(`Auctiion Not Ended`);
-    winStatus = "Auction is Currently Active";
+    var maxWin = Math.max.apply(Math, bidWinnner.map(function(o) { return o.bid; }));
     
-}
+    console.log(maxWin);
+    
+    
+    var result;
+    bidWinnner.forEach(function (arrayItem) {
+        if(arrayItem.bid === maxWin){
+        // console.log(arrayItem);
+        // console.log(JSON.stringify(arrayItem));
+        // let userObj = JSON.parse(arrayItem);
+        result =  arrayItem;
+        return;
+        }
+    });
+    
+     winStatus = result;
+    
+    
+     
+    // console.log(result.bidder);
+    // console.log(result.bidder.phone);
+    // console.log(result.bidder.email);
+    console.log(winStatus);
+    
+    
+// }
 
 
     if(!product){
