@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllProducts , createProduct, updateProduct, deleteProduct, getProductDetails, getMyProducts} = require("../controllers/productController");
+const { getAllProducts , createProduct, updateProduct, deleteProduct, getProductDetails, getMyProducts, placeBidOnProduct, getBiddedProduct} = require("../controllers/productController");
 const router = express.Router();
 require('../db/conn');
 
@@ -20,6 +20,22 @@ router.route("/product/:id").put(updateProduct).delete(deleteProduct).get(getPro
 
 // GET MY  PRODUCTS
 router.route("/products/myproducts").get(getMyProducts);
+
+
+
+
+// GET BIDDED PRODUCT ->> BID STATUS
+router.route("/products/bidstatus").get(getBiddedProduct);
+
+
+// PLACE BID ON PRODUCT
+router.route("/products/bid").post(placeBidOnProduct);
+
+
+// // PLACE BID ON PRODUCT
+// router.route("/product/bid").post(placeBidOnProduct);
+
+
 
 
 
