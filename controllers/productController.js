@@ -228,8 +228,8 @@ exports.getProductDetails = catchAsyncErrors(async (req , res , next) => {
 
 // Bid Winner
 // // const bidWinnner = await Product.find({_id : req.params.id}).sort({"bids.bid" : -1}).limit(1).populate('bids.bidder', '_id name phone');
-var countdownDate = new Date(product.bidEnd).getTime();
-      var now = new Date().getTime();
+// var countdownDate = new Date(product.bidEnd).getTime();
+//       var now = new Date().getTime();
 
 var winStatus;
 // if(countdownDate > now ){
