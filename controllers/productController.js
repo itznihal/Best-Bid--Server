@@ -165,12 +165,12 @@ exports.getMyProducts = catchAsyncErrors(async (req,res) => {
 
 
 
-    let myproducts = await Product.find({seller: req.userID}).populate('seller', '_id name phone').populate('bids.bidder', '_id name phone');
+    let sellerproducts = await Product.find({seller: req.userID}).populate('seller', '_id name phone').populate('bids.bidder', '_id name phone');
 
     console.log(`myProduct page Called`);
     res.status(200).json({
         success:true,
-        myproducts
+        sellerproducts
         });
     
     });
