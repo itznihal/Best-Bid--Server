@@ -6,7 +6,10 @@ const cookieParser = require("cookie-parser");
 const cloudinary = require("cloudinary");
 
 const bodyParser = require("body-parser");
-const fileUpload = require("express-fileupload")
+const fileUpload = require("express-fileupload");
+const cors=require("cors");
+const stripe=require("stripe")("sk_test_51KVzMySFWvR6XE1YibTsOQVGXXVtCjUY2IvNlXEbzlCTOb0hkngXsvAI2kcExNchbesK4jiTv4cpPCOjMHN7jYgF00TjjjozYy")
+const uuid=require("uuid");
 
 
 dotenv.config({ path: './config.env' });
@@ -30,6 +33,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended:true }));
 app.use(fileUpload());
+app.use(cors());
+
 
 // HANDLING UNCAUGHT EXCEPTION -> CONSOLE.LOG(UNDEFINE VARIABLE)
 process.on("uncaughtException" , err => {
@@ -62,9 +67,38 @@ app.use(require('./middleware/error'));
 //     res.send("Profile Page");
 // });
 
-app.get("/service", (req, res) => {
-    res.send("Services");
-});
+// app.get("/service", (req, res) => {
+//     res.send("Services");
+// });
+
+app.post("/payment"), (req,res)=>{
+    const {items, token}=req.body;
+    console.log("PRODUCT", items);
+    console.log("PRICE",items.price);
+    const idempotencykey=uuid() //user can't charge twice
+
+    return stripe.customers.create({
+        email: token.email,
+        source: token.id
+    }).then(customer=>{
+        stripe.charges.create({
+            amount: items.price,
+            currency: 'usd',
+            customer: customer.id, 
+            receipt_email: token.email,
+            description: `Buy items.name`,
+            shipping:{
+                name: token.card.name, 
+                address:{
+                    country:token.card.address_country
+                }
+            }
+        },{idempotencykey})
+    })
+    .then(result=>res.status(200).json(result))
+    .catch(err=>console.log(err))
+}
+
 
 // app.get("/contact", (req, res) => {
 //     res.send("cContact Page");
