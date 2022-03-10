@@ -20,6 +20,10 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ error: "Fill all Require Feild Properly " });
     }
 
+    if(password.length < 8) {
+        return res.status(400).json({ error: "password should be minimum 8 characters" });
+}
+
     try {
 
         const userExist = await User.findOne({ email: email });
@@ -70,6 +74,10 @@ router.post('/signin', async (req, res) => {
             return res.status(400).json({ error: "invalid credentials" });
         }
 
+          if(password.length < 8) {
+            return res.status(400).json({ error: "invalid credentials" });
+}
+console.log(password.length);
         const userLogin = await User.findOne({ email: email });
 
 
